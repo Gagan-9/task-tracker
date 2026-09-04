@@ -1,5 +1,5 @@
 {
-  "name": "clickup-task-tracker",
+  "name": "task-tracker",
   "version": "1.0.0",
   "description": "1-Click Desktop Task Tracker & Excel Report Generator for ClickUp",
   "main": "sync-and-report.js",
