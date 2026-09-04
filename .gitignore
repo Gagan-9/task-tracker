@@ -1,0 +1,42 @@
+# ==========================================
+# SENSITIVE / CREDENTIALS (NEVER COMMIT)
+# ==========================================
+.env
+.env.local
+.env.*.local
+
+# ==========================================
+# LOCAL DATABASE & DATA (PERSONAL TASKS)
+# ==========================================
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# GENERATED EXCEL REPORTS
+# ==========================================
+Reports/
+*.xlsx
+*.xls
+
+# ==========================================
+# PERSONAL BACKFILL FILES
+# ==========================================
+past-tasks.txt
+
+# ==========================================
+# DEPENDENCIES
+# ==========================================
+node_modules/
+package-lock.json
+
+# ==========================================
+# OS & SYSTEM FILES
+# ==========================================
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log

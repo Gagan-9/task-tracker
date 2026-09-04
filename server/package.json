@@ -1,0 +1,16 @@
+{
+  "name": "clickup-task-tracker",
+  "version": "1.0.0",
+  "description": "1-Click Desktop Task Tracker & Excel Report Generator for ClickUp",
+  "main": "sync-and-report.js",
+  "type": "module",
+  "scripts": {
+    "start": "node sync-and-report.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0"
+  }
+}
