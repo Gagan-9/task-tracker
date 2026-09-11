@@ -38,16 +38,11 @@ export async function generateMonthlyExcelReport(month) {
         t.date_closed,
         t.first_seen_assigned,
         t.current_assignee_is_me,
-        COALESCE(
-          (SELECT assigned_date FROM task_assignment_history WHERE task_id = t.id ORDER BY assigned_date DESC LIMIT 1),
-          SUBSTR(t.first_seen_assigned, 1, 10)
-        ) as assigned_date,
-        COALESCE(
-          (SELECT assigned_month FROM task_assignment_history WHERE task_id = t.id ORDER BY assigned_date DESC LIMIT 1),
-          SUBSTR(t.first_seen_assigned, 1, 7)
-        ) as assigned_month
-      FROM tasks t
-      ORDER BY t.first_seen_assigned DESC, t.name ASC
+        h.assigned_date,
+        h.assigned_month
+      FROM task_assignment_history h
+      INNER JOIN tasks t ON t.id = h.task_id
+      ORDER BY h.assigned_date DESC, t.name ASC
     `).all();
   }
 
@@ -67,7 +62,7 @@ export async function generateMonthlyExcelReport(month) {
   const inProgressTasks = totalTasks - completedTasks;
 
   // Title Banner
-  worksheet.mergeCells('A1:F1');
+  worksheet.mergeCells('A1:G1');
   const titleCell = worksheet.getCell('A1');
   titleCell.value = `ClickUp Developer Task Report - ${month && month !== 'ALL' ? month : 'All Time'}`;
   titleCell.font = { name: 'Calibri', size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
@@ -80,7 +75,7 @@ export async function generateMonthlyExcelReport(month) {
   worksheet.getRow(1).height = 35;
 
   // Summary Stat Bar
-  worksheet.mergeCells('A2:F2');
+  worksheet.mergeCells('A2:G2');
   const summaryCell = worksheet.getCell('A2');
   summaryCell.value = `Total Tasks: ${totalTasks}  |  Completed: ${completedTasks}  |  In Progress/Dev: ${inProgressTasks}  |  Handed Over to Testing: ${passedToTester}  |  Generated on: ${new Date().toLocaleString()}`;
   summaryCell.font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF475569' } };

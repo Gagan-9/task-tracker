@@ -53,7 +53,18 @@ async function main() {
     const reportFilePath = path.join(reportsDir, reportFileName);
 
     const buffer = await generateMonthlyExcelReport(currentMonth);
-    fs.writeFileSync(reportFilePath, Buffer.from(buffer));
+    let finalReportPath = reportFilePath;
+    try {
+      fs.writeFileSync(reportFilePath, Buffer.from(buffer));
+    } catch (writeErr) {
+      if (writeErr.code === 'EBUSY') {
+        const timeTag = now.toISOString().replace(/[:.]/g, '-').substring(11, 19);
+        finalReportPath = path.join(reportsDir, `ClickUp_Tasks_${currentMonthName}_${now.getFullYear()}_${timeTag}.xlsx`);
+        fs.writeFileSync(finalReportPath, Buffer.from(buffer));
+      } else {
+        throw writeErr;
+      }
+    }
 
     // Stats for notification
     const monthStats = db.prepare(`
@@ -70,7 +81,7 @@ async function main() {
     const handedToTester = monthStats.handed_to_tester || 0;
     const completed = monthStats.completed || 0;
 
-    openExcelFile(reportFilePath);
+    openExcelFile(finalReportPath);
 
     console.log(` Done! (${total} tasks recorded)`);
 
